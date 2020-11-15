@@ -233,15 +233,15 @@ double Get_headingDiff(double Input, double Setpoint){
 double PI_Controller(double error)
   {
 
-	integral += error*SampleTimeInSec;
-	Output=error*kp+integral*ki;
+	integral += error * SampleTimeInSec;
+	Output = error * kp + integral * ki;
     if (Output > 254){
       Output = 254;
       }
     else if (Output < -254){
         Output = -254;
       }
-    return (Output/254)*100;
+    return (Output / 254)*100;
   }
 
 
