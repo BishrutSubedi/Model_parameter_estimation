@@ -34,7 +34,7 @@ double lastE = 0;     // NOT USED
 //double Kcf = 3.1535;
 
 double kp=1.1;  // THIS VALUE IS HERE TO ROTATE THE MOTOR ONLY, NOT FROM ESTIMATION
-double ki=1.5;  // FOR ROTATION, KI GAIN, NOTHING TO DO WITH ESTIMATION
+double ki=1.1;  // FOR ROTATION, KI GAIN, NOTHING TO DO WITH ESTIMATION
 
 
 const int sampleTime = 60;
@@ -172,7 +172,8 @@ void PI_Motor()   //motor control
 
       if (abs(headingDiff) < offsetTol){    //offsetTot = 1.5
         pwm_msg.data = 0;                   //STOP    
-	pwm_pub.publish(pwm_msg);
+	      pwm_pub.publish(pwm_msg);
+
     	  if(Azmuth_index<Azmuth_num)
     	   {
            Azmuth_index++;
@@ -187,12 +188,14 @@ void PI_Motor()   //motor control
         if (Output > 0)
         {
         	pwm_msg.data = Output;    //MOTOR ROTATION YAHA MATRA CHANGE GAR H/W
-		pwm_pub.publish(pwm_msg);
+		      pwm_pub.publish(pwm_msg);
+
         }
         else
         {
-        	 pwm_msg.data = -Output;    //MOTOR ROTATION YAHA MATRA CHANGE GAR H/W
-		 pwm_pub.publish(pwm_msg);
+        	pwm_msg.data = -Output;    //MOTOR ROTATION YAHA MATRA CHANGE GAR H/W
+		      pwm_pub.publish(pwm_msg);
+
           }
         }
         t1 = steady_clock::now();
