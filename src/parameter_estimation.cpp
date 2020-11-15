@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 	out.close();    // CLOSE file data.txt
 	sleep(2);
 
-	while (Azmuth_index < Azmuth_num)
+	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
 		 PI_Motor();  //Azmuth index is incremented in PI_Motor()
 
