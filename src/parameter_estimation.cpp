@@ -10,7 +10,7 @@
 #include <thread>
 #include <time.h>
 #include <unistd.h>
-#include <fstream>
+#include <fstream
 #include <sys/time.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
@@ -102,11 +102,14 @@ int main(int argc, char **argv)
   Azmuth_num=sizeof(Azmuth)/sizeof(Azmuth[0]); 
 	cout<<Azmuth_num<<endl;
 
+  //RECREATE THIS FUNCTION AND DO YOUR OWN WAY
+
 	ofstream out("data.txt", ios::app);   // OPENING FILE data.txt TO WRITE. THIS FILE MUST PRE-EXIST ON COMPUTER AT RIGHT LOCATION
-			   if(!out) {                     // EXIT PROGRAM IF FILE NOT THERE, ADD WARNING ON EXIT
-			           cout << "Cannot open file.\n";
-			           return 1;
-			         }
+
+  if(!out) {                            // EXIT PROGRAM IF FILE NOT THERE, ADD WARNING ON EXIT
+          cout << "Cannot open file. \n";
+          return 1;
+        }
 
 	out<<endl;
 	out<<endl;
