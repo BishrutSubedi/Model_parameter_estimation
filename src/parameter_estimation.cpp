@@ -10,6 +10,7 @@
 #include <thread>
 #include <time.h>
 #include <unistd.h>
+#include <fstream>
 #include <sys/time.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
