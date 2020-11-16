@@ -37,7 +37,7 @@ double kp=1.1;  // THIS VALUE IS HERE TO ROTATE THE MOTOR ONLY, NOT FROM ESTIMAT
 double ki=1.1;  // FOR ROTATION, KI GAIN, NOTHING TO DO WITH ESTIMATION
 
 
-const int sampleTime = 60;
+const int sampleTime = 20;
 double SampleTimeInSec = ((double)sampleTime)/1000;
 steady_clock::time_point t2 = steady_clock::now();
 steady_clock::time_point t1 = steady_clock::now();
@@ -180,12 +180,13 @@ void PI_Motor()   //motor control
   {
 	 t2 = steady_clock::now();
 	duration<double> time_span = duration_cast<duration<double>>(t2 - t1);    // For time stamp and freq
+
     if ( time_span.count()>SampleTimeInSec)
     {
       float headingRaw =R_compass.c_heading();   //Get current compass
       //cout<<"heading: "<< headingRaw<<endl;
       float targetHeading = Azmuth[Azmuth_index];     //Get destination direction
-      Input=headingRaw;
+      Input = headingRaw;
       Setpoint = targetHeading;
       float headingDiff = Get_headingDiff(Input, Setpoint);
 
@@ -193,7 +194,7 @@ void PI_Motor()   //motor control
         pwm_msg.data = 0;                   //STOP    
 	      pwm_pub.publish(pwm_msg);
 
-    	  if(Azmuth_index<Azmuth_num)
+    	  if(Azmuth_index < Azmuth_num)
     	   {
            Azmuth_index++;
     	   }
@@ -216,6 +217,7 @@ void PI_Motor()   //motor control
 		      pwm_pub.publish(pwm_msg);
 
           }
+
         }
         t1 = steady_clock::now();
         data[data_index].during_time=time_span.count();
