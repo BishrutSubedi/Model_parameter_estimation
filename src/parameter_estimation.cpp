@@ -120,28 +120,47 @@ int main(int argc, char **argv)
 	{
 		 PI_Motor();  //Azmuth index is incremented in PI_Motor()
 
+    out.open("data.txt", ios::app);   // OPEN THE FILE data.txt 
+
+    if(!out) {
+            cout << "Cannot open file.\n";
+            return 1;
+          }
+
+  // WRITE TO FILE data.txt
+
+    for(int i=1;i<data_index;i++)
+    {
+      out<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
+      cout<<i<<endl;
+      //this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    }
+
+  // out.close();   //CLOSE THE FILE data.txt
+
 	}
 		pwm_msg.data = 0;    //STOP THE MOTOR
 		pwm_pub.publish(pwm_msg);
 
-	    out.open("data.txt", ios::app);   // OPEN THE FILE data.txt 
+	    // out.open("data.txt", ios::app);   // OPEN THE FILE data.txt 
       
-		   if(!out) {
-		           cout << "Cannot open file.\n";
-		           return 1;
-		         }
+		  //  if(!out) {
+		  //          cout << "Cannot open file.\n";
+		  //          return 1;
+		  //        }
 
-      // WRITE TO FILE data.txt
+      // // WRITE TO FILE data.txt
 
-		   for(int i=1;i<data_index;i++)
-		   {
-			   out<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
-			   cout<<i<<endl;
-			   //this_thread::sleep_for(std::chrono::milliseconds(500));
+		  //  for(int i=1;i<data_index;i++)
+		  //  {
+			//    out<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
+			//    cout<<i<<endl;
+			//    //this_thread::sleep_for(std::chrono::milliseconds(500));
 
-		   }
+		  //  }
 
-		   out.close();   //CLOSE THE FILE data.txt
+		out.close();   //CLOSE THE FILE data.txt
 
 
 		return 0;
