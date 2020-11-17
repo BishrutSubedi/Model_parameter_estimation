@@ -128,14 +128,14 @@ int main(int argc, char **argv)
             return 1;
           }
 
-  // WRITE TO FILE data.txt
+  // WRITE TO FILE data.txt 1
   // COMMENT THIS ALL OUT AND TEST FROM TERMINAL FILE ONLY
-    for(int i=1;i<data_index;i++)
-    {
-      fs<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
-      //this_thread::sleep_for(std::chrono::milliseconds(100)); //sleep 100ms in this thread
+    // for(int i=1;i<data_index;i++)
+    // {
+    //   fs<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
+    //   //this_thread::sleep_for(std::chrono::milliseconds(100)); //sleep 100ms in this thread
 
-    }
+    // }
 
 	} //END WHILE LOOP
 
