@@ -22,6 +22,8 @@
 #include "sensor_msgs/NavSatFix.h"
 #include <ros/callback_queue.h>
 
+// NOTE: RENAME local_pwm/local_rssi to remote_pwm/remote_rssi to work with remote system
+
 // from local_initial_Scan_main.cpp
 
 using namespace std;
