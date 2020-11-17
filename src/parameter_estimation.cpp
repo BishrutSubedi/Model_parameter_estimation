@@ -118,7 +118,7 @@ int main(int argc, char **argv)
 
 	sleep(2);
 
-  cout<< "time_count" << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
+  cout<< "time_count" << "," << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
 
 	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
@@ -186,7 +186,7 @@ void PI_Motor()   //motor control
        {
         Output = PI_Controller(headingDiff);
 
-        cout<< time_span.count() << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
+        cout<< steady_clock::now() << "," << "," << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
 
         if (Output > 0)
         { 
