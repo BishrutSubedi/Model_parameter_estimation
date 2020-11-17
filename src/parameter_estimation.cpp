@@ -134,7 +134,7 @@ int main(int argc, char **argv)
     for(int i=1;i<data_index;i++)
     {
       fs<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
-      //this_thread::sleep_for(std::chrono::milliseconds(500));
+      this_thread::sleep_for(std::chrono::milliseconds(100)); //sleep 100ms in this thread
 
     }
 
