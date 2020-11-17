@@ -38,7 +38,7 @@ double kp=1.1;  // THIS VALUE IS HERE TO ROTATE THE MOTOR ONLY, NOT FROM ESTIMAT
 double ki=1.1;  // FOR ROTATION, KI GAIN, NOTHING TO DO WITH ESTIMATION
 
 
-const int sampleTime = 20;
+const int sampleTime = 60;
 double SampleTimeInSec = ((double)sampleTime)/1000;
 steady_clock::time_point t2 = steady_clock::now();
 steady_clock::time_point t1 = steady_clock::now();
@@ -52,11 +52,13 @@ double offsetTol=1.5;
 //int Azmuth[] ={ 165,80,155,80,160,95,190,120,200,145,225,165,255,185,255,175,235,140,215,135,195,100,175,85,145,60,140};//exp1
 //int Azmuth[] ={ 75,150,90,170,220,165,245,290,200,260,170,100,165,80,155,65,135,45,165,100,195,130,215,145,235,140,220};//exp2
 //int Azmuth[] ={150,90,150,220,165,245,290,230,280,200,140,175,100,155,65,135,85,145,100,175,130,195,145,235,140,220};//exp3
-int Azmuth[] ={ 120,55,130,80,155,85,165,100,180,135,220,135,190,115,165,115,200,155,100,165,90,155,105,185,140,210,150}; //exp4
+//int Azmuth[] ={ 120,55,130,80,155,85,165,100,180,135,220,135,190,115,165,115,200,155,100,165,90,155,105,185,140,210,150}; //exp4
 //int Azmuth[] ={ 145,60,155,230,170,225,150,80,140,65,135,45,105,185,115,175,95,30,125,55,145,200,135,205,125,180,90};//exp5
 //int Azmuth[] ={ 125,185,130,215,130,215,135,75,145,95,160,115,185,265,200,275,185,245,180,250,170};//exp6
 //int Azmuth[] ={ 135,85,140,90,170,125,195,155,210,165,205,150,200,135,180,125,170,110,165,100,155,85,140,80,135,70,115};//exp7
 
+//Experiment for only one
+int Azmuth[] ={120}; //exp4
 
 int Azmuth_index=0;  // IS A GLOBAL VARIABLE
 //***********************************************
@@ -115,6 +117,8 @@ int main(int argc, char **argv)
 
 	sleep(2);
 
+  cout<< "time_count" << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
+
 	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
 		 PI_Motor();  //Azmuth index is incremented in PI_Motor() // fills global variable
@@ -126,6 +130,7 @@ int main(int argc, char **argv)
           }
 
   // WRITE TO FILE data.txt
+  // COMMENT THIS ALL OUT AND TEST FROM TERMINAL FILE ONLY
     for(int i=1;i<data_index;i++)
     {
       fs<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
@@ -159,9 +164,9 @@ void PI_Motor()   //motor control
 
     if ( time_span.count()>SampleTimeInSec)
     {
-      float headingRaw =R_compass.c_heading();        //Get current compass
+      float headingRaw =R_compass.c_heading();                              //Get current compass
       //cout<<"heading: "<< headingRaw<<endl;
-      float targetHeading = Azmuth[Azmuth_index];     //Get destination direction
+      float targetHeading = Azmuth[Azmuth_index];                           //Get destination direction
       Input = headingRaw;
       Setpoint = targetHeading;
       float headingDiff = Get_headingDiff(Input, Setpoint);
@@ -179,17 +184,20 @@ void PI_Motor()   //motor control
       else
        {
         Output = PI_Controller(headingDiff);
-        cout<<"output_pwm: "<< Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
+
+        cout<< time_span.count() << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
 
         if (Output > 0)
-        {
-        	pwm_msg.data = Output;    //MOTOR ROTATION YAHA MATRA CHANGE GAR H/W
+        { 
+          //Output = (int) Output
+        	pwm_msg.data = abs(Output);    //MOTOR ROTATION YAHA MATRA CHANGE GAR H/W
 		      pwm_pub.publish(pwm_msg);
 
         }
         else
         {
-        	pwm_msg.data = -Output;    //MOTOR ROTATION YAHA MATRA CHANGE GAR H/W
+          //Output = (int) Output
+        	pwm_msg.data = -(abs(Output));    //like double negative is +ve, I don't think this is necessary
 		      pwm_pub.publish(pwm_msg);
 
           }
