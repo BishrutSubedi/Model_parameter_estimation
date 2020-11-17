@@ -10,7 +10,7 @@
 #include <thread>
 #include <time.h>
 #include <unistd.h>
-#include <fstream
+#include <fstream>
 #include <sys/time.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
@@ -107,24 +107,21 @@ int main(int argc, char **argv)
   fs.open ("test.txt", std::fstream::in | std::fstream::out | std::fstream::app);
 	
   if(!fs) {                               // EXIT PROGRAM IF FILE NOT THERE, ADD WARNING ON EXIT
-          cout << "Cannot open file. \n";
+          cout << "1. annot open file. \n";
           return 1;
         }
 	
 	fs<<"In exp4The Azmuth[] ={ 120,55,130,80,155,85,165,100,180,135,220,135,190,115,165,115,200,155,100,165,90,155,105,185,140,210,150} and kp=1.1, ki=1.5;"<<endl;
 
-	fs.close();    // CLOSE file data.txt
 	sleep(2);
 
 	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
 		 PI_Motor();  //Azmuth index is incremented in PI_Motor() // fills global variable
 
-    fs.open("data.txt", ios::app);   // OPEN THE FILE data.txt 
-
 //  Can comment this whole section
     if(!fs) {
-            cout << "Cannot open file.\n";
+            cout << "2. Cannot open file.\n"; // here it throws error
             return 1;
           }
 
@@ -138,35 +135,14 @@ int main(int argc, char **argv)
 
     }
 
-  // out.close();   //CLOSE THE FILE data.txt
-
 	}
 		pwm_msg.data = 0;    //STOP THE MOTOR
 		pwm_pub.publish(pwm_msg);
 
-	    // out.open("data.txt", ios::app);   // OPEN THE FILE data.txt 
-      
-		  //  if(!out) {
-		  //          cout << "Cannot open file.\n";
-		  //          return 1;
-		  //        }
-
-      // // WRITE TO FILE data.txt
-
-		  //  for(int i=1;i<data_index;i++)
-		  //  {
-			//    out<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
-			//    cout<<i<<endl;
-			//    //this_thread::sleep_for(std::chrono::milliseconds(500));
-
-		  //  }
-
 		fs.close();   
 
 		return 0;
-
 }
-
 
 void setting()
 {
@@ -183,7 +159,7 @@ void PI_Motor()   //motor control
 
     if ( time_span.count()>SampleTimeInSec)
     {
-      float headingRaw =R_compass.c_heading();   //Get current compass
+      float headingRaw =R_compass.c_heading();        //Get current compass
       //cout<<"heading: "<< headingRaw<<endl;
       float targetHeading = Azmuth[Azmuth_index];     //Get destination direction
       Input = headingRaw;
@@ -248,7 +224,6 @@ double Get_headingDiff(double Input, double Setpoint){
     }
     return error;
   }
-
 
 
 double PI_Controller(double error)
