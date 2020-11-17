@@ -44,6 +44,8 @@ const int sampleTime = 60;
 double SampleTimeInSec = ((double)sampleTime)/1000;
 steady_clock::time_point t2 = steady_clock::now();
 steady_clock::time_point t1 = steady_clock::now();
+steady_clock::time_point t4 = steady_clock::now();
+steady_clock::time_point t3 = steady_clock::now();
 
 // initial heading*******************************
 double offsetTol=1.5;
@@ -185,8 +187,9 @@ void PI_Motor()   //motor control
       else
        {
         Output = PI_Controller(headingDiff);
-
-        cout<< steady_clock::now() << "," << "," << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
+        t4 = steady_clock::now();
+        duration<double> time_freq = duration_cast<duration<double>>(t4 - t3);
+        cout<< time_freq.count() << "," << "," << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
 
         if (Output > 0)
         { 
