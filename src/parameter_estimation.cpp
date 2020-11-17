@@ -107,7 +107,7 @@ int main(int argc, char **argv)
   fs.open ("test.txt", std::fstream::in | std::fstream::out | std::fstream::app);
 	
   if(!fs) {                               // EXIT PROGRAM IF FILE NOT THERE, ADD WARNING ON EXIT
-          cout << "1. annot open file. \n";
+          cout << "1. Cannot open file. \n";
           return 1;
         }
 	
@@ -126,16 +126,15 @@ int main(int argc, char **argv)
           }
 
   // WRITE TO FILE data.txt
-
     for(int i=1;i<data_index;i++)
     {
       fs<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
-      cout<<i<<endl;
       //this_thread::sleep_for(std::chrono::milliseconds(500));
 
     }
 
-	}
+	} //END WHILE LOOP
+
 		pwm_msg.data = 0;    //STOP THE MOTOR
 		pwm_pub.publish(pwm_msg);
 
@@ -143,6 +142,7 @@ int main(int argc, char **argv)
 
 		return 0;
 }
+
 
 void setting()
 {
