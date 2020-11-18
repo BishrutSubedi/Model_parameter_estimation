@@ -22,9 +22,7 @@
 #include "sensor_msgs/NavSatFix.h"
 #include <ros/callback_queue.h>
 
-// NOTE: RENAME local_pwm/local_rssi to remote_pwm/remote_rssi to work with remote system
-
-// from local_initial_Scan_main.cpp
+// from remote_initial_Scan_main.cpp
 
 using namespace std;
 using namespace std::chrono;
@@ -63,6 +61,8 @@ double offsetTol=1.5;
 //Experiment for only one
 int Azmuth[] ={120}; //exp4
 
+//int Azmuth[] ={ 125,185,130,215,130,75,145,95,160,115,185,170};//exp6
+
 int Azmuth_index=0;  // IS A GLOBAL VARIABLE
 //***********************************************
 
@@ -91,7 +91,7 @@ int data_index=0;   // A GLOBAL VARIABLE
 
 ros::Publisher ros_serial;
 ros::Publisher pwm_pub;
-ros::Subscriber local_rssi;
+ros::Subscriber remote_rssi;
 std_msgs::Int16   pwm_msg;
 
 
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 	ros::init(argc,argv,"parameter_estimation");
 	ros::NodeHandle n;
 
-	pwm_pub = n.advertise<std_msgs::Int16>("local_pwm",1);
+	pwm_pub = n.advertise<std_msgs::Int16>("remote_pwm",1);
 
 	setting();
 
@@ -120,7 +120,7 @@ int main(int argc, char **argv)
 
 	sleep(2);
 
-  cout<< "time_count" << "," << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
+  cout<< "time_count" << "," << "," << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
 
 	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
@@ -187,9 +187,9 @@ void PI_Motor()   //motor control
       else
        {
         Output = PI_Controller(headingDiff);
-        t4 = steady_clock::now();
-        duration<double> time_freq = duration_cast<duration<double>>(t4 - t3);
-        cout<< time_freq.count() << "," << "," << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
+	t4 = steady_clock::now();
+	duration<double> time_freq = duration_cast<duration<double>>(t4 - t3);
+        cout<< time_freq.count() << "," << Output <<" ,"<< Input <<" ," << targetHeading << endl; //printing to screen as well
 
         if (Output > 0)
         { 
