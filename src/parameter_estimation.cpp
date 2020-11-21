@@ -34,11 +34,11 @@ double lastE = 0;     // NOT USED
 //double Kcp = 4.4721;
 //double Kcf = 3.1535;
 
-double kp=1.1;  // THIS VALUE IS HERE TO ROTATE THE MOTOR ONLY, NOT FROM ESTIMATION
-double ki=1.1;  // FOR ROTATION, KI GAIN, NOTHING TO DO WITH ESTIMATION
+double kp=2.1;  // THIS VALUE IS HERE TO ROTATE THE MOTOR ONLY, NOT FROM ESTIMATION
+double ki=2.6;  // FOR ROTATION, KI GAIN, NOTHING TO DO WITH ESTIMATION
 
 
-const int sampleTime = 60;
+const int sampleTime = 30;  // can change to 20s
 double SampleTimeInSec = ((double)sampleTime)/1000;
 steady_clock::time_point t2 = steady_clock::now();
 steady_clock::time_point t1 = steady_clock::now();
@@ -46,12 +46,12 @@ steady_clock::time_point t4 = steady_clock::now();
 steady_clock::time_point t3 = steady_clock::now();
 
 // initial heading*******************************
-double offsetTol=1.5;
+double offsetTol = 4;
 
 // THESE ARE TARGET VALUE OF AZIMUTH TO GET THE ANTENNA TO USING DC MOTOR ROTATION
 // THEY ARE USED LATER AS HARDCORED FOR ESTIMATION USING MATLAB
 
-//int Azmuth[] ={ 165,80,155,80,160,95,190,120,200,145,225,165,255,185,255,175,235,140,215,135,195,100,175,85,145,60,140};//exp1
+//int Azmuth[] ={ 165,80,155,80,160,95,190,120,200,145,225,165,255,185,255,175,235,140,215,135,195,100,175,85,145,60,140};//exp1_songwei
 //int Azmuth[] ={ 75,150,90,170,220,165,245,290,200,260,170,100,165,80,155,65,135,45,165,100,195,130,215,145,235,140,220};//exp2
 //int Azmuth[] ={150,90,150,220,165,245,290,230usleep(200000)0,180,135,220,135,190,115,165,115,200,155,100,165,90,155,105,185,140,210,150}; //exp4
 //int Azmuth[] ={ 145,60,155,230,170,225,150,80,140,65,135,45,105,185,115,175,95,30,125,55,145,200,135,205,125,180,90};//exp5
@@ -59,9 +59,13 @@ double offsetTol=1.5;
 //int Azmuth[] ={ 135,85,140,90,170,125,195,155,210,165,205,150,200,135,180,125,170,110,165,100,155,85,140,80,135,70,115};//exp7
 
 //Experiment for only one
-int Azmuth[] ={120}; //exp4
+//int Azmuth[] ={165}; //exp4
 
-//int Azmuth[] ={ 125,185,130,215,130,75,145,95,160,115,185,170};//exp6
+//int Azmuth[] ={ 125,185,130,215,130,75,145,95,160,170};//exp1
+//int Azmuth[] ={ 145,60,155,230,170,225,150,80,140,65,135};//exp2
+//int Azmuth[] ={145,60,155,230,170};//exp3
+
+int Azmuth[] ={ 165,80,155,80,160,95,190,120,200,145,225,165,255,185,255,175,235};//exp1_songwei
 
 int Azmuth_index=0;  // IS A GLOBAL VARIABLE
 //***********************************************
@@ -120,7 +124,7 @@ int main(int argc, char **argv)
 
 	sleep(2);
 
-  cout<< "time_count" << "," << "," << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
+  cout<< "time_count" << "," << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
 
 	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
@@ -141,7 +145,7 @@ int main(int argc, char **argv)
 
     // }
 
-	} //END WHILE LOOP
+	} //EN254D WHILE LOOP
 
 		pwm_msg.data = 0;    //STOP THE MOTOR
 		pwm_pub.publish(pwm_msg);
@@ -241,14 +245,17 @@ double Get_headingDiff(double Input, double Setpoint){
 double PI_Controller(double error)
   {
 
-	integral += error * SampleTimeInSec;
+	integral += error * SampleTimeInSec; //(integral = integral + error * SampleTimeInSec
 	Output = error * kp + integral * ki;
+
     if (Output > 254){
       Output = 254;
       }
+
     else if (Output < -254){
         Output = -254;
       }
+	
     return (Output / 254)*100;
   }
 
