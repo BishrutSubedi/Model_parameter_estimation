@@ -46,7 +46,7 @@ steady_clock::time_point t4 = steady_clock::now();
 steady_clock::time_point t3 = steady_clock::now();
 
 steady_clock::time_point t5 = steady_clock::now(); // timer to increment count after 3 sec
-steady_clock::time_point t6 = steady_clock::now()
+steady_clock::time_point t6 = steady_clock::now();
 
 // initial heading*******************************
 double offsetTol = 4;
@@ -114,47 +114,22 @@ int main(int argc, char **argv)
   Azmuth_num=sizeof(Azmuth)/sizeof(Azmuth[0]); 
 	cout<<Azmuth_num<<endl;
 
-  //RECREATE THIS FUNCTION AND DO YOUR OWN WAY
-  std::fstream fs;
-  fs.open ("test.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-	
-  if(!fs) {                               // EXIT PROGRAM IF FILE NOT THERE, ADD WARNING ON EXIT
-          cout << "1. Cannot open file. \n";
-          return 1;
-        }
-	
-	fs<<"In exp4The Azmuth[] ={ 120,55,130,80,155,85,165,100,180,135,220,135,190,115,165,115,200,155,100,165,90,155,105,185,140,210,150} and kp=1.1, ki=1.5;"<<endl;
-
 	sleep(2);
 
   cout<< "time_count" << "," << "Output_pwm" <<" ,"<< "raw_angle" <<" ," << "target_angle" << endl; //printing to screen as well
 
+  t5 = steady_clock::now(); // initial t5 can be before it enters the loop first
 	while (Azmuth_index < Azmuth_num)     //NOTE: THIS LOOP ONLY EXITS AFTER ALL ANGLE TARGET REACHED AND DO NOT WRITE ANYTHING AS WRITING IS AFTER WHILE LOOP FINISHES.
 	{
-     t5 = steady_clock::now();
+     //t5 = steady_clock::now();
 		 PI_Motor();  //Azmuth index is incremented in PI_Motor() // fills global variable
     
-//  Can comment this whole section
-    if(!fs) {
-            cout << "2. Cannot open file.\n"; // here it throws error
-            return 1;
-          }
 
-  // WRITE TO FILE data.txt 1
-  // COMMENT THIS ALL OUT AND TEST FROM TERMINAL FILE ONLY
-    // for(int i=1;i<data_index;i++)
-    // {
-    //   fs<<data[i].during_time<<" "<<data[i].value_pwm<<" "<<data[i].value_heading<<endl;
-    //   //this_thread::sleep_for(std::chrono::milliseconds(100)); //sleep 100ms in this thread
-
-    // }
-
-	} //EN254D WHILE LOOP
+	} //END WHILE LOOP
 
 		pwm_msg.data = 0;    //STOP THE MOTOR
 		pwm_pub.publish(pwm_msg);
-
-		fs.close();   
+ 
 
 		return 0;
 }
@@ -182,12 +157,14 @@ void PI_Motor()   //motor control
       Setpoint = targetHeading;
       float headingDiff = Get_headingDiff(Input, Setpoint);
 
-        t6 = steady_clock::now()
-        duration<double> time3sec = duration_cast<duration<double>>(t6 - t5)
+        t6 = steady_clock::now();
+        duration<double> time3sec = duration_cast<duration<double>>(t6 - t5);
 
-        if ( (abs(headingDiff) < offsetTol) || (time3sec.count > 3.0) ){    //offsetTot = 1.5 // here add time 
+        if ( (abs(headingDiff) < offsetTol) || (time3sec.count() > 3.0) ){    //offsetTot = 1.5 // here add time 
         pwm_msg.data = 0;                   //STOP    
 	      pwm_pub.publish(pwm_msg);
+
+        t5 = steady_clock::now(); // another t5 can be updated inside breaking loop everytime
 
     	  if(Azmuth_index < Azmuth_num)
     	   {
@@ -218,6 +195,8 @@ void PI_Motor()   //motor control
           }
 
         }
+
+
         t1 = steady_clock::now();
         data[data_index].during_time=time_span.count();
         data[data_index].value_pwm=Output;
